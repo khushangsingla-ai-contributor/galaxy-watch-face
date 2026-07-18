@@ -6,6 +6,10 @@ Galaxy Watch 7 (Wear OS 5). Watch faces are **resource-only**: no Java/Kotlin,
 Target WFF **version 2** / **API 34** (Galaxy Watch 7 ships Wear OS 5).
 
 Standard build/lint/validate commands and project layout live in `README.md`.
+The autopilot build workflow (clarify → design → implement → test → benchmark →
+document → PR) and AOD/battery guidelines live in `CONTRIBUTING.md`. Follow that
+workflow when asked to create a new watch face, including asking clarifying
+questions before implementing.
 
 ## Cursor Cloud specific instructions
 
@@ -29,3 +33,18 @@ Standard build/lint/validate commands and project layout live in `README.md`.
 - When adding a new face: create a module under `faces/`, add it to
   `settings.gradle`, include a `res/drawable/preview.png` (required by
   `watch_face_info.xml`), keep the module code-free, then build + validate.
+- **Battery/AOD benchmark:** `python3 scripts/benchmark.py` builds release APKs
+  and runs Google's Memory Footprint Evaluator (jar at
+  `~/wff-tools/memory-footprint.jar`), writing `faces/<id>/benchmark.json`. This
+  static memory footprint is the device-independent battery/AOD proxy — actual
+  battery numbers need a physical Galaxy Watch 7, which cannot run here.
+- **Gallery webpage:** `node scripts/generate-gallery.mjs` regenerates the
+  static, searchable gallery under `docs/` (served by GitHub Pages). Re-run it
+  after adding/changing a face; CI (`.github/workflows/watchfaces.yml`) also
+  regenerates and deploys it, and uploads APK/preview artifacts.
+- **Git hooks:** the pre-push hook (build + lint + WFF validation) lives in
+  `hooks/` and is activated via `core.hooksPath`. The startup update script sets
+  this automatically; otherwise run `./scripts/setup-hooks.sh`.
+- The `~/wff-tools/` jars (`wff-validator.jar`, `memory-footprint.jar`) are built
+  from `github.com/google/watchface`; rebuild per the headers in
+  `scripts/wff-validate.sh` / `scripts/benchmark.py` if the directory is empty.

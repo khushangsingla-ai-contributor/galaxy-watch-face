@@ -1,0 +1,114 @@
+name: Watch Faces CI
+
+# Builds, validates and benchmarks every watch face, regenerates the gallery
+# webpage and uploads the watch-face artifacts. Runs whenever a face (or the
+# tooling) changes, and deploys the gallery to GitHub Pages on main.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "faces/**"
+      - "scripts/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle/**"
+      - ".github/workflows/watchfaces.yml"
+  pull_request:
+    paths:
+      - "faces/**"
+      - "scripts/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: watchfaces-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache WFF tools (validator + memory-footprint jars)
+        id: wff-tools
+        uses: actions/cache@v4
+        with:
+          path: ~/wff-tools
+          key: wff-tools-v1
+
+      - name: Build WFF tools
+        if: steps.wff-tools.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/google/watchface.git /tmp/watchface
+          mkdir -p "$HOME/wff-tools"
+          (cd /tmp/watchface/third_party/wff && ./gradlew :specification:validator:executable-jar)
+          cp /tmp/watchface/third_party/wff/specification/validator/build/libs/wff-validator.jar "$HOME/wff-tools/"
+          (cd /tmp/watchface/play-validations && ./gradlew :memory-footprint:executable-jar)
+          cp /tmp/watchface/play-validations/memory-footprint/build/libs/memory-footprint.jar "$HOME/wff-tools/"
+
+      - name: Build + lint watch faces
+        run: ./gradlew assembleDebug assembleRelease lintDebug --no-daemon
+
+      - name: Validate Watch Face Format XML
+        run: ./scripts/wff-validate.sh 2
+
+      - name: Benchmark memory footprint (battery / AOD proxy)
+        run: python3 scripts/benchmark.py
+
+      - name: Regenerate gallery webpage
+        run: node scripts/generate-gallery.mjs
+
+      - name: Upload watch-face artifacts (APKs + previews)
+        uses: actions/upload-artifact@v4
+        with:
+          name: watch-faces
+          path: |
+            faces/*/build/outputs/apk/**/*.apk
+            faces/*/src/main/res/drawable/preview.png
+            faces/*/benchmark.json
+
+      - name: Upload gallery for Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy-pages:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy gallery to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

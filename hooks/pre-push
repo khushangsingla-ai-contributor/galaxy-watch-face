@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# Pre-push hook: build + lint all watch faces and validate their WFF XML before
+# allowing a push. Install it with: scripts/setup-hooks.sh
+#
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+echo "[pre-push] Building and linting all watch faces..."
+./gradlew assembleDebug lintDebug --no-daemon -q
+
+echo "[pre-push] Validating Watch Face Format XML..."
+if [ -f "${WFF_VALIDATOR_JAR:-$HOME/wff-tools/wff-validator.jar}" ]; then
+    ./scripts/wff-validate.sh "${WFF_VERSION:-2}"
+else
+    echo "[pre-push] WARNING: WFF validator jar not found; skipping XML validation."
+    echo "[pre-push]          See scripts/wff-validate.sh header to build it."
+fi
+
+echo "[pre-push] OK"
