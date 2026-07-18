@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!--
+    Galaxy Simple Analog Event: a clean analogue face with hour ticks, cardinal
+    numerals, a date complication above 6 o'clock, and ghost hands driven by the
+    next-event complication slot (calendar / timer / alarm via NEXT_EVENT).
+-->
+<WatchFace width="450" height="450">
+    <Metadata key="CLOCK_TYPE" value="ANALOG" />
+    <Metadata key="PREVIEW_TIME" value="10:08:00" />
+
+    <Scene backgroundColor="#ff000000">
+
+        <!-- Slot 2: next upcoming event (calendar, timer, alarm, etc.). -->
+        <ComplicationSlot x="0" y="0" width="450" height="450" slotId="2"
+            supportedTypes="SHORT_TEXT LONG_TEXT EMPTY"
+            isCustomizable="TRUE"
+            displayName="@string/event_slot_name">
+            <BoundingOval x="0" y="0" width="450" height="450" />
+            <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT"
+                defaultSystemProviderType="SHORT_TEXT" />
+            <Complication type="SHORT_TEXT" />
+            <Complication type="LONG_TEXT" />
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+        <!-- Hour ticks (hours without cardinal numerals). -->
+        <Group name="tick_30" x="212" y="0" width="26" height="450" angle="30">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_60" x="212" y="0" width="26" height="450" angle="60">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_120" x="212" y="0" width="26" height="450" angle="120">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_150" x="212" y="0" width="26" height="450" angle="150">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_210" x="212" y="0" width="26" height="450" angle="210">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_240" x="212" y="0" width="26" height="450" angle="240">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_300" x="212" y="0" width="26" height="450" angle="300">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+        <Group name="tick_330" x="212" y="0" width="26" height="450" angle="330">
+            <PartDraw x="12" y="40" width="2" height="12">
+                <Line startX="1" startY="0" endX="1" endY="12">
+                    <Stroke color="#88ffffff" thickness="2" />
+                </Line>
+            </PartDraw>
+        </Group>
+
+        <!-- Cardinal numerals at 12, 3, 6, 9 (replace ticks at those positions). -->
+        <Group name="num_12" x="212" y="0" width="26" height="450" angle="0">
+            <PartText x="0" y="44" width="26" height="22">
+                <Text align="CENTER">
+                    <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#bbffffff">
+                        <![CDATA[12]]>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
+        <Group name="num_3" x="212" y="0" width="26" height="450" angle="90">
+            <PartText x="0" y="44" width="26" height="22">
+                <Text align="CENTER">
+                    <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#bbffffff">
+                        <![CDATA[3]]>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
+        <Group name="num_6" x="212" y="0" width="26" height="450" angle="180">
+            <PartText x="0" y="44" width="26" height="22">
+                <Text align="CENTER">
+                    <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#bbffffff">
+                        <![CDATA[6]]>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
+        <Group name="num_9" x="212" y="0" width="26" height="450" angle="270">
+            <PartText x="0" y="44" width="26" height="22">
+                <Text align="CENTER">
+                    <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#bbffffff">
+                        <![CDATA[9]]>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
+
+        <!-- Date complication above 6 o'clock. -->
+        <ComplicationSlot x="155" y="272" width="140" height="34" slotId="1"
+            supportedTypes="SHORT_TEXT EMPTY"
+            displayName="@string/date_slot_name">
+            <BoundingBox x="0" y="0" width="140" height="34" />
+            <DefaultProviderPolicy defaultSystemProvider="DATE"
+                defaultSystemProviderType="SHORT_TEXT" />
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="140" height="34">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#99ffffff">
+                            <Template>
+                                <![CDATA[%s]]>
+                                <Parameter expression="[COMPLICATION.TEXT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="EMPTY" />
+        </ComplicationSlot>
+
+        <!-- Ghost event hands (scene-level fallback using slot 2 time context). -->
+        <Condition>
+            <Expressions>
+                <Expression name="hasEvent">
+                    <![CDATA[[COMPLICATION.2.TYPE] != NOT_CONFIGURED && [COMPLICATION.2.TYPE] != EMPTY]]>
+                </Expression>
+            </Expressions>
+            <Compare expression="hasEvent">
+                <PartDraw x="224" y="225" width="3" height="115" pivotX="0.5" pivotY="1.0" alpha="80">
+                    <Transform target="angle"
+                        value="([COMPLICATION.2.HOUR_0_23_MINUTE] + [COMPLICATION.2.MINUTE] / 60) * 30" />
+                    <Line startX="1" startY="0" endX="1" endY="115">
+                        <Stroke color="#55a8c8ff" thickness="3" />
+                    </Line>
+                    <Variant mode="AMBIENT" target="alpha" value="45" />
+                </PartDraw>
+                <PartDraw x="224" y="225" width="2" height="150" pivotX="0.5" pivotY="1.0" alpha="70">
+                    <Transform target="angle" value="[COMPLICATION.2.MINUTE_SECOND] * 6" />
+                    <Line startX="1" startY="0" endX="1" endY="150">
+                        <Stroke color="#44a8c8ff" thickness="2" />
+                    </Line>
+                    <Variant mode="AMBIENT" target="alpha" value="40" />
+                </PartDraw>
+            </Compare>
+        </Condition>
+
+        <!-- Main analogue clock. -->
+        <AnalogClock x="0" y="0" width="450" height="450">
+            <Variant mode="AMBIENT" target="alpha" value="210" />
+            <HourHand resource="hour" x="215" y="50" width="20" height="190"
+                pivotX="0.5" pivotY="0.921" tintColor="#ffffffff" />
+            <MinuteHand resource="minute" x="217" y="25" width="16" height="220"
+                pivotX="0.5" pivotY="0.9" tintColor="#ffffffff" />
+        </AnalogClock>
+
+        <!-- Centre cap. -->
+        <PartDraw x="222" y="222" width="6" height="6">
+            <Ellipse x="0" y="0" width="6" height="6">
+                <Fill color="#ffffffff" />
+            </Ellipse>
+        </PartDraw>
+    </Scene>
+</WatchFace>

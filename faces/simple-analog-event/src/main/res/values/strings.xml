@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="watch_face_name">Galaxy Simple Analog Event</string>
+    <string name="date_slot_name">Date</string>
+    <string name="event_slot_name">Next event</string>
+</resources>
