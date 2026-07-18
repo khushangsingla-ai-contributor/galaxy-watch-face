@@ -19,3 +19,4 @@ rootProject.name = 'galaxy-watch-face'
 // Each watch face is an independent, resource-only Wear OS (Watch Face Format)
 // module under faces/. Add new faces here as new modules.
 include ':faces:simple-digital'
+include ':faces:simple-analog-event'
