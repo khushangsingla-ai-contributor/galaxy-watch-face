@@ -108,7 +108,6 @@ async function collectFaces() {
 
 function render(faces) {
   const data = JSON.stringify(faces).replace(/</g, "\\u003c");
-  const generatedAt = new Date().toISOString();
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -157,7 +156,6 @@ function render(faces) {
   .bar > span { display: block; height: 100%; background: linear-gradient(90deg,#3ddc97,#6fa8ff); }
   .bench small { color: #8794ab; font-size: .72rem; }
   .empty { grid-column: 1/-1; text-align: center; color: #8794ab; padding: 60px 0; }
-  footer { text-align: center; color: #5b6680; font-size: .75rem; padding: 24px; }
 </style>
 </head>
 <body>
@@ -170,7 +168,6 @@ function render(faces) {
   <span class="count" id="count"></span>
 </div>
 <main id="grid"></main>
-<footer>Generated ${generatedAt} · ambient memory shown as % of the 10 MB Wear OS ambient limit (lower is better for battery)</footer>
 <script>
   const FACES = ${data};
   const grid = document.getElementById("grid");
