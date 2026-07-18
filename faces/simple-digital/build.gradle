@@ -1,0 +1,30 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.galaxywatchface.simpledigital'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.galaxywatchface.simpledigital'
+        // Wear OS 5 (Galaxy Watch 7) => Watch Face Format v2 => API 34
+        minSdk 34
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    // Watch Face Format packages are resource-only (no code). Keep minification
+    // disabled so declarative resources are never stripped.
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.getByName('debug')
+        }
+    }
+}
