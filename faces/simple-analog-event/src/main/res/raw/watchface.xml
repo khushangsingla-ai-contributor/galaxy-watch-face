@@ -119,27 +119,17 @@
             </PartText>
         </Group>
 
-        <!-- Date complication above 6 o'clock. -->
-        <ComplicationSlot x="155" y="272" width="140" height="34" slotId="1"
-            supportedTypes="SHORT_TEXT EMPTY"
-            displayName="@string/date_slot_name">
-            <BoundingBox x="0" y="0" width="140" height="34" />
-            <DefaultProviderPolicy defaultSystemProvider="DATE"
-                defaultSystemProviderType="SHORT_TEXT" />
-            <Complication type="SHORT_TEXT">
-                <PartText x="0" y="0" width="140" height="34">
-                    <Text align="CENTER" ellipsis="TRUE">
-                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#99ffffff">
-                            <Template>
-                                <![CDATA[%s]]>
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
-                    </Text>
-                </PartText>
-            </Complication>
-            <Complication type="EMPTY" />
-        </ComplicationSlot>
+        <!-- Day-of-month above 6 o'clock (no month). -->
+        <PartText x="195" y="272" width="60" height="34">
+            <Text align="CENTER">
+                <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#99ffffff">
+                    <Template>
+                        <![CDATA[%s]]>
+                        <Parameter expression="[DAY]" />
+                    </Template>
+                </Font>
+            </Text>
+        </PartText>
 
         <!-- Ghost event hands (scene-level fallback using slot 2 time context). -->
         <Condition>

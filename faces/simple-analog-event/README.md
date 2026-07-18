@@ -11,8 +11,7 @@ Face Format v2).
   numerals at 12, 3, 6, and 9 (replacing ticks at those positions).
 - **Main hands:** white hour and minute hands (no seconds) centred on a small
   cap.
-- **Date (slot 1):** system `DATE` complication centred above the 6 o'clock
-  numeral.
+- **Day (above 6):** day-of-month numeral only (`[DAY]`), no month name.
 - **Next event (slot 2):** defaults to the system `NEXT_EVENT` provider, which
   aggregates calendar entries, timers, alarms, and similar scheduled items.
   The event start time is shown as a pair of dim cyan ghost hands, lighter and
