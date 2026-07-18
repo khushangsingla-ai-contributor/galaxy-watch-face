@@ -41,8 +41,9 @@ questions before implementing.
 - **Gallery webpage:** `node scripts/generate-gallery.mjs` regenerates the
   static, searchable gallery under `docs/`. The `pre-commit` hook runs this
   automatically whenever a face changes and stages `docs/`, so every PR that
-  touches a face also updates the gallery (there is no CI). Serve the site via
-  GitHub Pages → Deploy from branch → `main` `/docs`.
+  touches a face also updates the gallery. The only CI is
+  `.github/workflows/deploy-pages.yml`, which deploys `docs/` to GitHub Pages
+  when `docs/` changes on `main` (Pages source must be set to "GitHub Actions").
 - **Git hooks** (activated via `core.hooksPath`, set by the startup update
   script; otherwise run `./scripts/setup-hooks.sh`):
   - `pre-commit`: regenerates + stages `docs/` when a watch face changes.

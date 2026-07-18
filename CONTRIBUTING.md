@@ -24,7 +24,8 @@ sequence:
    `face.json` metadata entry so the gallery picks it up.
 7. **Open a PR** — include a screenshot/preview of the face in the description
    and the benchmark result. The `pre-commit` hook regenerates the gallery under
-   `docs/` and stages it, so the gallery update is part of the same PR.
+   `docs/` and stages it, so the gallery update is part of the same PR. Once
+   merged to `main`, the deploy-pages workflow publishes the updated gallery.
 
 ## Always-on-display & battery guidelines
 

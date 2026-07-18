@@ -66,6 +66,13 @@ The APK is written to `faces/<name>/build/outputs/apk/`.
 This uses the official [WFF validator](https://github.com/google/watchface).
 See the script header for one-time setup of the validator jar.
 
+## Gallery
+
+A searchable gallery of all faces is generated under `docs/` by the `pre-commit`
+hook (`node scripts/generate-gallery.mjs`). On `main`, the
+`deploy-pages` workflow publishes `docs/` to GitHub Pages whenever it changes
+(set Pages source to "GitHub Actions").
+
 ## Install / preview on a device
 
 ```bash
