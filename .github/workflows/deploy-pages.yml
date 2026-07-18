@@ -1,14 +1,12 @@
 name: Deploy gallery to Pages
 
-# Publishes the watch-face gallery (docs/) to GitHub Pages whenever docs/
-# changes on main. The gallery itself is generated locally by the pre-commit
-# hook, so this workflow only deploys the already-committed docs/.
+# Regenerates the watch-face gallery and publishes it to GitHub Pages when a
+# release tag is pushed (e.g. git tag v1.0.0 && git push origin v1.0.0).
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "docs/**"
+    tags:
+      - "*"
   workflow_dispatch:
 
 permissions:
@@ -28,6 +26,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate gallery
+        run: node scripts/generate-gallery.mjs
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

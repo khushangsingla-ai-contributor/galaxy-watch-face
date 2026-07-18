@@ -42,8 +42,10 @@ questions before implementing.
   static, searchable gallery under `docs/`. The `pre-commit` hook runs this
   automatically whenever a face changes and stages `docs/`, so every PR that
   touches a face also updates the gallery. The only CI is
-  `.github/workflows/deploy-pages.yml`, which deploys `docs/` to GitHub Pages
-  when `docs/` changes on `main` (Pages source must be set to "GitHub Actions").
+  `.github/workflows/deploy-pages.yml` (tag push) and
+  `.github/workflows/release.yml` (tag push), which deploy `docs/` to GitHub
+  Pages and publish APKs when a release tag is pushed (Pages source must be set
+  to "GitHub Actions").
 - **Git hooks** (activated via `core.hooksPath`, set by the startup update
   script; otherwise run `./scripts/setup-hooks.sh`):
   - `pre-commit`: regenerates + stages `docs/` when a watch face changes.

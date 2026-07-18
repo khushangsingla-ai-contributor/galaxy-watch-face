@@ -36,6 +36,11 @@
   .tag { font-size: .72rem; background: #1b2338; color: #9fc0ff;
     padding: 3px 9px; border-radius: 999px; }
   .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: .74rem; color: #8794ab; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .actions a { font-size: .76rem; color: #9fc0ff; text-decoration: none;
+    padding: 6px 10px; border-radius: 8px; border: 1px solid #2a3555; background: #161d2e; }
+  .actions a:hover { border-color: #6fa8ff; background: #1b2540; }
+  .build-hint { margin-top: 10px; font-size: .7rem; color: #6d7a92; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   .bench { margin-top: 12px; }
   .bar { height: 8px; border-radius: 999px; background: #1f2740; overflow: hidden; }
   .bar > span { display: block; height: 100%; background: linear-gradient(90deg,#3ddc97,#6fa8ff); }
@@ -54,9 +59,9 @@
   <span class="count" id="count"></span>
 </div>
 <main id="grid"></main>
-<footer>Generated 2026-07-18T06:41:58.641Z · ambient memory shown as % of the 10 MB Wear OS ambient limit (lower is better for battery)</footer>
+<footer>Generated 2026-07-18T07:31:23.626Z · ambient memory shown as % of the 10 MB Wear OS ambient limit (lower is better for battery)</footer>
 <script>
-  const FACES = [{"id":"simple-digital","name":"Galaxy Simple Digital","description":"Minimal always-on digital watch face: bold HH:MM with a subtle seconds readout, tuned for low ambient power on the Galaxy Watch 7.","clockType":"DIGITAL","wffVersion":2,"tags":["digital","minimal","aod","dark"],"aod":"Pure black background, seconds hidden in ambient, thin-weight dimmed font in ambient to minimise lit OLED pixels.","module":":faces:simple-digital","preview":"assets/simple-digital.png","benchmark":{"ambientMb":2.26,"activeMb":2.26,"ambientPctOfLimit":22.6,"pass":true}}];
+  const FACES = [{"id":"simple-digital","name":"Galaxy Simple Digital","description":"Minimal always-on digital watch face: bold HH:MM with a subtle seconds readout, tuned for low ambient power on the Galaxy Watch 7.","clockType":"DIGITAL","wffVersion":2,"tags":["digital","minimal","aod","dark"],"aod":"Pure black background, seconds hidden in ambient, thin-weight dimmed font in ambient to minimise lit OLED pixels.","module":":faces:simple-digital","preview":"assets/simple-digital.png","sourceUrl":"https://github.com/khushangsingla-ai-contributor/galaxy-watch-face/tree/main/faces/simple-digital","buildCommand":"./gradlew :faces:simple-digital:assembleDebug","installCommand":"./gradlew :faces:simple-digital:installDebug","downloadUrl":"https://github.com/khushangsingla-ai-contributor/galaxy-watch-face/releases/latest/download/simple-digital.apk","releaseUrl":"https://github.com/khushangsingla-ai-contributor/galaxy-watch-face/releases/latest","benchmark":{"ambientMb":2.26,"activeMb":2.26,"ambientPctOfLimit":22.6,"pass":true}}];
   const grid = document.getElementById("grid");
   const count = document.getElementById("count");
   const search = document.getElementById("search");
@@ -76,10 +81,17 @@
     const meta = [];
     if (f.clockType) meta.push('<span>'+esc(f.clockType)+'</span>');
     if (f.wffVersion) meta.push('<span>WFF v'+esc(f.wffVersion)+'</span>');
+    const actions = [];
+    if (f.sourceUrl) actions.push('<a href="'+esc(f.sourceUrl)+'" target="_blank" rel="noopener">Source</a>');
+    if (f.downloadUrl) actions.push('<a href="'+esc(f.downloadUrl)+'" download>Download APK</a>');
+    if (f.releaseUrl) actions.push('<a href="'+esc(f.releaseUrl)+'" target="_blank" rel="noopener">Releases</a>');
+    const actionHtml = actions.length ? '<div class="actions">'+actions.join("")+'</div>' : '';
+    const buildHint = f.buildCommand
+      ? '<div class="build-hint" title="Build from the repo root">'+esc(f.buildCommand)+'</div>' : '';
     return '<article class="card">'+shot+'<div class="body"><h2>'+esc(f.name)+'</h2>'
       + '<p class="desc">'+esc(f.description)+'</p>'
       + '<div class="tags">'+tags+'</div>'
-      + '<div class="meta">'+meta.join("")+'</div>'+bench+'</div></article>';
+      + '<div class="meta">'+meta.join("")+'</div>'+bench+actionHtml+buildHint+'</div></article>';
   }
   function haystack(f){
     return [f.name,f.description,f.clockType,f.aod,(f.tags||[]).join(" ")].join(" ").toLowerCase();
