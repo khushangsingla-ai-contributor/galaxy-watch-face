@@ -69,10 +69,9 @@ See the script header for one-time setup of the validator jar.
 ## Gallery
 
 A searchable gallery of all faces is generated under `docs/` by the `pre-commit`
-hook (`node scripts/generate-gallery.mjs`). Each card links to the face's source
-module, build command, and the latest release APK on GitHub. On `main`, the
-`deploy-pages` workflow publishes `docs/` to GitHub Pages whenever it changes
-(set Pages source to "GitHub Actions").
+hook (`node scripts/generate-gallery.mjs`). On `main`, the `deploy-pages` workflow
+publishes `docs/` to GitHub Pages when it changes (set Pages source to "GitHub
+Actions"). Pushing a release tag also regenerates and deploys the gallery.
 
 ## Build installable APK artifacts
 
@@ -91,8 +90,10 @@ git push origin v1.0.0
 ```
 
 The `release` workflow builds every face and uploads `dist/<id>.apk` as release
-assets. Gallery download links use `/releases/latest/download/<id>.apk`, so they
-automatically point at the newest tag without regenerating the gallery.
+assets. The `deploy-pages` workflow also runs on tag push, regenerates the
+gallery, and publishes it to GitHub Pages. Gallery download links use
+`/releases/latest/download/<id>.apk`, so they automatically point at the newest
+tag.
 
 ## Install / preview on a device
 

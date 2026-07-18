@@ -27,7 +27,8 @@ sequence:
    `docs/` and stages it, so the gallery update is part of the same PR. Once
    merged to `main`, the `deploy-pages` workflow publishes the updated gallery.
    Publish installable APKs by pushing a git tag (e.g. `v1.0.0`); the `release`
-   workflow builds every face and attaches APKs to the matching GitHub Release.
+   workflow builds every face and attaches APKs to the matching GitHub Release,
+   and `deploy-pages` regenerates and publishes the gallery.
 
 ## Always-on-display & battery guidelines
 
