@@ -1,17 +1,12 @@
 name: Deploy gallery to Pages
 
-# Publishes the watch-face gallery (docs/) to GitHub Pages when docs/ change on
-# main, or when a release tag is pushed (regenerates the gallery first).
+# Regenerates the watch-face gallery and publishes it to GitHub Pages when a
+# release tag is pushed (e.g. git tag v1.0.0 && git push origin v1.0.0).
 
 on:
   push:
-    branches: [main]
     tags:
       - "*"
-    paths:
-      - "docs/**"
-      - "faces/**"
-      - "scripts/generate-gallery.mjs"
   workflow_dispatch:
 
 permissions:
@@ -32,14 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
 
       - name: Regenerate gallery
-        if: startsWith(github.ref, 'refs/tags/')
         run: node scripts/generate-gallery.mjs
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}

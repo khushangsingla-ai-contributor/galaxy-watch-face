@@ -69,9 +69,9 @@ See the script header for one-time setup of the validator jar.
 ## Gallery
 
 A searchable gallery of all faces is generated under `docs/` by the `pre-commit`
-hook (`node scripts/generate-gallery.mjs`). On `main`, the `deploy-pages` workflow
-publishes `docs/` to GitHub Pages when it changes (set Pages source to "GitHub
-Actions"). Pushing a release tag also regenerates and deploys the gallery.
+hook (`node scripts/generate-gallery.mjs`). Pushing a release tag triggers
+`deploy-pages`, which regenerates the gallery and publishes it to GitHub Pages
+(set Pages source to "GitHub Actions").
 
 ## Build installable APK artifacts
 

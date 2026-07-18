@@ -25,10 +25,9 @@ sequence:
 7. **Open a PR** — include a screenshot/preview of the face in the description
    and the benchmark result. The `pre-commit` hook regenerates the gallery under
    `docs/` and stages it, so the gallery update is part of the same PR. Once
-   merged to `main`, the `deploy-pages` workflow publishes the updated gallery.
-   Publish installable APKs by pushing a git tag (e.g. `v1.0.0`); the `release`
-   workflow builds every face and attaches APKs to the matching GitHub Release,
-   and `deploy-pages` regenerates and publishes the gallery.
+   merged to `main`, push a release tag to publish APKs and deploy the gallery.
+   The `release` workflow builds every face and attaches APKs to the GitHub
+   Release; `deploy-pages` regenerates and publishes the gallery.
 
 ## Always-on-display & battery guidelines
 
