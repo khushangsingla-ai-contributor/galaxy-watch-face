@@ -1,0 +1,4 @@
+// Top-level build file. Watch face modules apply the Android application plugin.
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}

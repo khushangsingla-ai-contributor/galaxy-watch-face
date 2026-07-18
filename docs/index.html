@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Galaxy Watch 7 — Watch Face Gallery</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #0b0e14; color: #e6e9ef; }
+  header { padding: 28px 20px 8px; text-align: center; }
+  h1 { margin: 0 0 4px; font-size: 1.6rem; }
+  .sub { color: #93a1b5; font-size: .9rem; }
+  .toolbar { position: sticky; top: 0; background: #0b0e14ee; backdrop-filter: blur(6px);
+    padding: 16px 20px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; z-index: 5; }
+  #search { width: min(560px, 92vw); padding: 12px 16px; border-radius: 999px;
+    border: 1px solid #26304a; background: #131826; color: #e6e9ef; font-size: 1rem; }
+  #search:focus { outline: none; border-color: #6fa8ff; }
+  .count { align-self: center; color: #93a1b5; font-size: .85rem; }
+  main { max-width: 1100px; margin: 0 auto; padding: 8px 20px 60px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .card { background: #131826; border: 1px solid #1f2740; border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column; transition: transform .12s, border-color .12s; }
+  .card:hover { transform: translateY(-3px); border-color: #6fa8ff; }
+  .shot { display: flex; align-items: center; justify-content: center; padding: 18px; background:
+    radial-gradient(circle at 50% 40%, #1a2133, #0b0e14); }
+  .shot img { width: 190px; height: 190px; border-radius: 50%; object-fit: cover;
+    box-shadow: 0 6px 24px #0008; }
+  .shot .noimg { width: 190px; height: 190px; border-radius: 50%; background: #10151f;
+    display: flex; align-items: center; justify-content: center; color: #55617a; font-size: .8rem; }
+  .body { padding: 14px 16px 18px; }
+  .body h2 { margin: 0 0 6px; font-size: 1.08rem; }
+  .desc { color: #aeb9cc; font-size: .86rem; margin: 0 0 12px; line-height: 1.4; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tag { font-size: .72rem; background: #1b2338; color: #9fc0ff;
+    padding: 3px 9px; border-radius: 999px; }
+  .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: .74rem; color: #8794ab; }
+  .bench { margin-top: 12px; }
+  .bar { height: 8px; border-radius: 999px; background: #1f2740; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg,#3ddc97,#6fa8ff); }
+  .bench small { color: #8794ab; font-size: .72rem; }
+  .empty { grid-column: 1/-1; text-align: center; color: #8794ab; padding: 60px 0; }
+  footer { text-align: center; color: #5b6680; font-size: .75rem; padding: 24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Galaxy Watch 7 · Watch Face Gallery</h1>
+  <div class="sub">Battery- &amp; always-on-display-optimised Watch Face Format faces</div>
+</header>
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Search by name, tag, clock type…" autocomplete="off" />
+  <span class="count" id="count"></span>
+</div>
+<main id="grid"></main>
+<footer>Generated 2026-07-18T06:41:58.641Z · ambient memory shown as % of the 10 MB Wear OS ambient limit (lower is better for battery)</footer>
+<script>
+  const FACES = [{"id":"simple-digital","name":"Galaxy Simple Digital","description":"Minimal always-on digital watch face: bold HH:MM with a subtle seconds readout, tuned for low ambient power on the Galaxy Watch 7.","clockType":"DIGITAL","wffVersion":2,"tags":["digital","minimal","aod","dark"],"aod":"Pure black background, seconds hidden in ambient, thin-weight dimmed font in ambient to minimise lit OLED pixels.","module":":faces:simple-digital","preview":"assets/simple-digital.png","benchmark":{"ambientMb":2.26,"activeMb":2.26,"ambientPctOfLimit":22.6,"pass":true}}];
+  const grid = document.getElementById("grid");
+  const count = document.getElementById("count");
+  const search = document.getElementById("search");
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])); }
+  function card(f){
+    const shot = f.preview
+      ? '<div class="shot"><img loading="lazy" src="'+esc(f.preview)+'" alt="'+esc(f.name)+'"/></div>'
+      : '<div class="shot"><div class="noimg">no preview</div></div>';
+    const tags = f.tags.map(t => '<span class="tag">'+esc(t)+'</span>').join("");
+    let bench = "";
+    if (f.benchmark) {
+      const pct = Math.min(100, f.benchmark.ambientPctOfLimit || 0);
+      bench = '<div class="bench"><div class="bar"><span style="width:'+pct+'%"></span></div>'
+        + '<small>ambient '+f.benchmark.ambientMb+' MB · '+pct+'% of limit · '
+        + (f.benchmark.pass ? 'PASS' : 'FAIL')+'</small></div>';
+    }
+    const meta = [];
+    if (f.clockType) meta.push('<span>'+esc(f.clockType)+'</span>');
+    if (f.wffVersion) meta.push('<span>WFF v'+esc(f.wffVersion)+'</span>');
+    return '<article class="card">'+shot+'<div class="body"><h2>'+esc(f.name)+'</h2>'
+      + '<p class="desc">'+esc(f.description)+'</p>'
+      + '<div class="tags">'+tags+'</div>'
+      + '<div class="meta">'+meta.join("")+'</div>'+bench+'</div></article>';
+  }
+  function haystack(f){
+    return [f.name,f.description,f.clockType,f.aod,(f.tags||[]).join(" ")].join(" ").toLowerCase();
+  }
+  function draw(q){
+    const term = (q||"").trim().toLowerCase();
+    const list = term ? FACES.filter(f => haystack(f).includes(term)) : FACES;
+    grid.innerHTML = list.length ? list.map(card).join("")
+      : '<div class="empty">No watch faces match “'+esc(term)+'”.</div>';
+    count.textContent = list.length + " / " + FACES.length + " faces";
+  }
+  search.addEventListener("input", e => draw(e.target.value));
+  draw("");
+</script>
+</body>
+</html>

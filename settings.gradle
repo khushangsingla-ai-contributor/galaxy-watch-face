@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'galaxy-watch-face'
+
+// Each watch face is an independent, resource-only Wear OS (Watch Face Format)
+// module under faces/. Add new faces here as new modules.
+include ':faces:simple-digital'

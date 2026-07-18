@@ -1,0 +1,9 @@
+{
+  "activeMb": 2.26,
+  "ambientMb": 2.26,
+  "activeLimitMb": 100.0,
+  "ambientLimitMb": 10.0,
+  "ambientPctOfLimit": 22.6,
+  "pass": true,
+  "generatedAt": "2026-07-18T06:40:32.184949+00:00"
+}

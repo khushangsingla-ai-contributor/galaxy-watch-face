@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+    Galaxy Simple Digital: a minimal, resource-only digital watch face template
+    for the Samsung Galaxy Watch 7 (Wear OS 5 / Watch Face Format v2).
+
+    This is the starting template for the repository. New watch faces are added
+    as new modules under faces/. Reference for the format:
+    https://developer.android.com/training/wearables/wff
+-->
+<WatchFace width="450" height="450">
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+    <Scene backgroundColor="#ff000000">
+        <DigitalClock x="0" y="0" width="450" height="450">
+            <!-- Interactive mode: bold HH:MM, respects the device 12/24h setting. -->
+            <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="150" width="450" height="120" alpha="255">
+                <Variant mode="AMBIENT" target="alpha" value="0" />
+                <Font family="SYNC_TO_DEVICE" size="120" weight="NORMAL" slant="NORMAL" color="#ffffffff" />
+            </TimeText>
+
+            <!-- Ambient mode: thinner weight to save power. -->
+            <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="150" width="450" height="120" alpha="0">
+                <Variant mode="AMBIENT" target="alpha" value="255" />
+                <Font family="SYNC_TO_DEVICE" size="120" weight="THIN" slant="NORMAL" color="#ffb0c4ff" />
+            </TimeText>
+
+            <!-- Seconds: interactive only, hidden in ambient. -->
+            <TimeText format="ss" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="275" width="450" height="60" alpha="255">
+                <Variant mode="AMBIENT" target="alpha" value="0" />
+                <Font family="SYNC_TO_DEVICE" size="44" weight="NORMAL" slant="NORMAL" color="#ff6fa8ff" />
+            </TimeText>
+        </DigitalClock>
+    </Scene>
+</WatchFace>
