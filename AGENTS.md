@@ -39,12 +39,14 @@ questions before implementing.
   static memory footprint is the device-independent battery/AOD proxy — actual
   battery numbers need a physical Galaxy Watch 7, which cannot run here.
 - **Gallery webpage:** `node scripts/generate-gallery.mjs` regenerates the
-  static, searchable gallery under `docs/` (served by GitHub Pages). Re-run it
-  after adding/changing a face; CI (`.github/workflows/watchfaces.yml`) also
-  regenerates and deploys it, and uploads APK/preview artifacts.
-- **Git hooks:** the pre-push hook (build + lint + WFF validation) lives in
-  `hooks/` and is activated via `core.hooksPath`. The startup update script sets
-  this automatically; otherwise run `./scripts/setup-hooks.sh`.
+  static, searchable gallery under `docs/`. The `pre-commit` hook runs this
+  automatically whenever a face changes and stages `docs/`, so every PR that
+  touches a face also updates the gallery (there is no CI). Serve the site via
+  GitHub Pages → Deploy from branch → `main` `/docs`.
+- **Git hooks** (activated via `core.hooksPath`, set by the startup update
+  script; otherwise run `./scripts/setup-hooks.sh`):
+  - `pre-commit`: regenerates + stages `docs/` when a watch face changes.
+  - `pre-push`: build + lint + WFF validation.
 - The `~/wff-tools/` jars (`wff-validator.jar`, `memory-footprint.jar`) are built
   from `github.com/google/watchface`; rebuild per the headers in
   `scripts/wff-validate.sh` / `scripts/benchmark.py` if the directory is empty.

@@ -29,7 +29,7 @@ it in `settings.gradle`.
 
 ## Requirements
 
-- JDK 17+ (JDK 21 is used in CI/cloud)
+- JDK 17+ (JDK 21 is used in the cloud dev VM)
 - Android SDK with `platforms;android-34`, `build-tools;34.0.0`, `platform-tools`
 - Gradle wrapper is included (`./gradlew`)
 

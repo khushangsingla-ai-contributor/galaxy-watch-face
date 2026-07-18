@@ -23,7 +23,8 @@ sequence:
 6. **Document** — add `faces/<id>/README.md` with the design + AOD notes and a
    `face.json` metadata entry so the gallery picks it up.
 7. **Open a PR** — include a screenshot/preview of the face in the description
-   and the benchmark result. CI regenerates the gallery and uploads artifacts.
+   and the benchmark result. The `pre-commit` hook regenerates the gallery under
+   `docs/` and stages it, so the gallery update is part of the same PR.
 
 ## Always-on-display & battery guidelines
 
