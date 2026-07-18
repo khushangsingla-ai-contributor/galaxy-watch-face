@@ -25,9 +25,9 @@ sequence:
 7. **Open a PR** — include a screenshot/preview of the face in the description
    and the benchmark result. The `pre-commit` hook regenerates the gallery under
    `docs/` and stages it, so the gallery update is part of the same PR. Once
-   merged to `main`, the `build-faces` workflow builds APK artifacts, updates
-   the gallery download links, and deploys Pages (the `deploy-pages` workflow
-   still handles gallery-only doc changes).
+   merged to `main`, the `deploy-pages` workflow publishes the updated gallery.
+   APK artifacts can be built locally with `scripts/build-artifacts.sh` or by
+   running the `build-faces` workflow manually in GitHub Actions.
 
 ## Always-on-display & battery guidelines
 
