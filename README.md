@@ -69,9 +69,27 @@ See the script header for one-time setup of the validator jar.
 ## Gallery
 
 A searchable gallery of all faces is generated under `docs/` by the `pre-commit`
-hook (`node scripts/generate-gallery.mjs`). On `main`, the
-`deploy-pages` workflow publishes `docs/` to GitHub Pages whenever it changes
-(set Pages source to "GitHub Actions").
+hook (`node scripts/generate-gallery.mjs`). Each card links to the face's source
+module, build command, and a downloadable APK (served from `docs/downloads/`
+after CI builds). On `main`, the `deploy-pages` workflow publishes `docs/` to
+GitHub Pages whenever it changes (set Pages source to "GitHub Actions"). The
+`build-faces` workflow rebuilds APKs when face modules change, uploads them as
+GitHub Actions artifacts, and redeploys the gallery with download links.
+
+## Build installable APK artifacts
+
+```bash
+# Build release APKs for every face into dist/ (also writes dist/manifest.json)
+./scripts/build-artifacts.sh
+
+# Copy APKs into docs/downloads/ for local gallery preview
+./scripts/build-artifacts.sh --output docs/downloads
+node scripts/generate-gallery.mjs
+```
+
+On GitHub, the `build-faces` workflow runs the same script on every push to
+`main` that touches `faces/`, uploads `dist/` as a workflow artifact (retained
+90 days), and deploys the APKs alongside the gallery on Pages.
 
 ## Install / preview on a device
 

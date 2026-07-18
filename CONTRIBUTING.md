@@ -25,7 +25,9 @@ sequence:
 7. **Open a PR** — include a screenshot/preview of the face in the description
    and the benchmark result. The `pre-commit` hook regenerates the gallery under
    `docs/` and stages it, so the gallery update is part of the same PR. Once
-   merged to `main`, the deploy-pages workflow publishes the updated gallery.
+   merged to `main`, the `build-faces` workflow builds APK artifacts, updates
+   the gallery download links, and deploys Pages (the `deploy-pages` workflow
+   still handles gallery-only doc changes).
 
 ## Always-on-display & battery guidelines
 
@@ -68,6 +70,7 @@ include ':faces:<id>'
 ./gradlew assembleDebug lintDebug       # build + lint all faces
 ./scripts/wff-validate.sh 2             # validate WFF XML
 python3 scripts/benchmark.py            # memory-footprint benchmark
+./scripts/build-artifacts.sh            # build release APKs -> dist/
 node scripts/generate-gallery.mjs       # regenerate docs/ gallery
 ./scripts/setup-hooks.sh                # install the pre-push hook
 ```

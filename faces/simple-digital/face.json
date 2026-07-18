@@ -3,6 +3,7 @@
   "name": "Galaxy Simple Digital",
   "description": "Minimal always-on digital watch face: bold HH:MM with a subtle seconds readout, tuned for low ambient power on the Galaxy Watch 7.",
   "module": ":faces:simple-digital",
+  "modulePath": "faces/simple-digital",
   "clockType": "DIGITAL",
   "wffVersion": 2,
   "tags": ["digital", "minimal", "aod", "dark"],

@@ -4,15 +4,40 @@
 // copies each preview image into docs/assets/, and writes docs/index.html with
 // client-side search. Re-run whenever a watch face is added or changed.
 
-import { readdir, readFile, mkdir, copyFile, writeFile, stat } from "node:fs/promises";
+import { readdir, readFile, mkdir, copyFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const facesDir = join(repoRoot, "faces");
 const docsDir = join(repoRoot, "docs");
 const assetsDir = join(docsDir, "assets");
+const downloadsDir = join(docsDir, "downloads");
+const defaultBranch = process.env.GITHUB_REF_NAME || process.env.GALLERY_BRANCH || "main";
+
+function resolveRepoBase() {
+  const server = (process.env.GITHUB_SERVER_URL || "https://github.com").replace(/\/$/, "");
+  const repo = process.env.GITHUB_REPOSITORY;
+  if (repo) return `${server}/${repo}`;
+  try {
+    const remote = execSync("git config --get remote.origin.url", {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    const ssh = remote.match(/^git@([^:]+):(.+?)(?:\.git)?$/);
+    if (ssh) return `${server}/${ssh[2]}`;
+    const https = remote.match(/^(?:https?:\/\/)(?:[^@]+@)?[^/]+\/(.+?)(?:\.git)?$/);
+    if (https) return `${server}/${https[1]}`;
+  } catch {
+    /* no git remote */
+  }
+  return null;
+}
+
+const repoBase = resolveRepoBase();
 
 async function readJson(path) {
   try {
@@ -47,6 +72,13 @@ async function collectFaces() {
       previewAsset = `assets/${dest}`;
     }
 
+    const modulePath = meta.modulePath || `faces/${id}`;
+    const gradleModule = meta.module || `:faces:${id}`;
+    const sourceUrl = meta.sourceUrl || (repoBase ? `${repoBase}/tree/${defaultBranch}/${modulePath}` : null);
+    const artifactsUrl = meta.artifactsUrl || (repoBase ? `${repoBase}/actions/workflows/build-faces.yml` : null);
+    const downloadApk = join(downloadsDir, `${id}.apk`);
+    const downloadUrl = meta.downloadUrl || `downloads/${id}.apk`;
+
     faces.push({
       id,
       name: meta.name || id,
@@ -55,8 +87,14 @@ async function collectFaces() {
       wffVersion: meta.wffVersion || null,
       tags: Array.isArray(meta.tags) ? meta.tags : [],
       aod: meta.aod || "",
-      module: meta.module || "",
+      module: gradleModule,
       preview: previewAsset,
+      sourceUrl,
+      buildCommand: meta.buildCommand || `./gradlew ${gradleModule}:assembleDebug`,
+      installCommand: meta.installCommand || `./gradlew ${gradleModule}:installDebug`,
+      downloadUrl,
+      downloadReady: existsSync(downloadApk),
+      artifactsUrl,
       benchmark: benchmark
         ? {
             ambientMb: benchmark.ambientMb,
@@ -111,6 +149,12 @@ function render(faces) {
   .tag { font-size: .72rem; background: #1b2338; color: #9fc0ff;
     padding: 3px 9px; border-radius: 999px; }
   .meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: .74rem; color: #8794ab; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .actions a { font-size: .76rem; color: #9fc0ff; text-decoration: none;
+    padding: 6px 10px; border-radius: 8px; border: 1px solid #2a3555; background: #161d2e; }
+  .actions a:hover { border-color: #6fa8ff; background: #1b2540; }
+  .actions a.muted { color: #7d8aa3; border-style: dashed; }
+  .build-hint { margin-top: 10px; font-size: .7rem; color: #6d7a92; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   .bench { margin-top: 12px; }
   .bar { height: 8px; border-radius: 999px; background: #1f2740; overflow: hidden; }
   .bar > span { display: block; height: 100%; background: linear-gradient(90deg,#3ddc97,#6fa8ff); }
@@ -151,10 +195,21 @@ function render(faces) {
     const meta = [];
     if (f.clockType) meta.push('<span>'+esc(f.clockType)+'</span>');
     if (f.wffVersion) meta.push('<span>WFF v'+esc(f.wffVersion)+'</span>');
+    const actions = [];
+    if (f.sourceUrl) actions.push('<a href="'+esc(f.sourceUrl)+'" target="_blank" rel="noopener">Source</a>');
+    if (f.downloadUrl) {
+      const cls = f.downloadReady ? '' : ' class="muted"';
+      const title = f.downloadReady ? 'Download APK' : 'Download APK (built by CI)';
+      actions.push('<a href="'+esc(f.downloadUrl)+'"'+cls+' download>'+title+'</a>');
+    }
+    if (f.artifactsUrl) actions.push('<a href="'+esc(f.artifactsUrl)+'" target="_blank" rel="noopener">CI artifacts</a>');
+    const actionHtml = actions.length ? '<div class="actions">'+actions.join("")+'</div>' : '';
+    const buildHint = f.buildCommand
+      ? '<div class="build-hint" title="Build from the repo root">'+esc(f.buildCommand)+'</div>' : '';
     return '<article class="card">'+shot+'<div class="body"><h2>'+esc(f.name)+'</h2>'
       + '<p class="desc">'+esc(f.description)+'</p>'
       + '<div class="tags">'+tags+'</div>'
-      + '<div class="meta">'+meta.join("")+'</div>'+bench+'</div></article>';
+      + '<div class="meta">'+meta.join("")+'</div>'+bench+actionHtml+buildHint+'</div></article>';
   }
   function haystack(f){
     return [f.name,f.description,f.clockType,f.aod,(f.tags||[]).join(" ")].join(" ").toLowerCase();
