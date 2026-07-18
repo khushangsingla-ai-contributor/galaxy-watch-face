@@ -139,17 +139,17 @@
                 </Expression>
             </Expressions>
             <Compare expression="hasEvent">
-                <PartDraw x="224" y="225" width="3" height="115" pivotX="0.5" pivotY="1.0" alpha="80">
+                <PartDraw x="224" y="225" width="3" height="95" pivotX="0.5" pivotY="1.0" alpha="80">
                     <Transform target="angle"
                         value="([COMPLICATION.2.HOUR_0_23_MINUTE] + [COMPLICATION.2.MINUTE] / 60) * 30" />
-                    <Line startX="1" startY="0" endX="1" endY="115">
+                    <Line startX="1" startY="0" endX="1" endY="95">
                         <Stroke color="#55a8c8ff" thickness="3" />
                     </Line>
                     <Variant mode="AMBIENT" target="alpha" value="45" />
                 </PartDraw>
-                <PartDraw x="224" y="225" width="2" height="150" pivotX="0.5" pivotY="1.0" alpha="70">
+                <PartDraw x="224" y="225" width="2" height="165" pivotX="0.5" pivotY="1.0" alpha="70">
                     <Transform target="angle" value="[COMPLICATION.2.MINUTE_SECOND] * 6" />
-                    <Line startX="1" startY="0" endX="1" endY="150">
+                    <Line startX="1" startY="0" endX="1" endY="165">
                         <Stroke color="#44a8c8ff" thickness="2" />
                     </Line>
                     <Variant mode="AMBIENT" target="alpha" value="40" />
@@ -160,9 +160,9 @@
         <!-- Main analogue clock. -->
         <AnalogClock x="0" y="0" width="450" height="450">
             <Variant mode="AMBIENT" target="alpha" value="210" />
-            <HourHand resource="hour" x="215" y="50" width="20" height="190"
-                pivotX="0.5" pivotY="0.921" tintColor="#ffffffff" />
-            <MinuteHand resource="minute" x="217" y="25" width="16" height="220"
+            <HourHand resource="hour" x="216" y="78" width="18" height="160"
+                pivotX="0.5" pivotY="0.92" tintColor="#ffffffff" />
+            <MinuteHand resource="minute" x="219" y="5" width="12" height="244"
                 pivotX="0.5" pivotY="0.9" tintColor="#ffffffff" />
         </AnalogClock>
 
