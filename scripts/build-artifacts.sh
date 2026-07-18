@@ -5,8 +5,11 @@
 #
 # Usage:
 #   ./scripts/build-artifacts.sh                  # build -> dist/
-#   ./scripts/build-artifacts.sh --output docs/downloads
+#   ./scripts/build-artifacts.sh --output dist
 #   ./scripts/build-artifacts.sh --skip-build     # collect existing APKs only
+#
+# CI: the release workflow runs this script on tag push and uploads dist/*.apk
+# as GitHub Release assets.
 #
 set -euo pipefail
 

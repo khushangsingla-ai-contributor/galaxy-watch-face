@@ -70,24 +70,29 @@ See the script header for one-time setup of the validator jar.
 
 A searchable gallery of all faces is generated under `docs/` by the `pre-commit`
 hook (`node scripts/generate-gallery.mjs`). Each card links to the face's source
-module, build command, and a downloadable APK. On `main`, the `deploy-pages`
-workflow publishes `docs/` to GitHub Pages whenever it changes (set Pages source
-to "GitHub Actions"). APKs can be built locally (below) or via the manual
-`build-faces` GitHub Actions workflow.
+module, build command, and the latest release APK on GitHub. On `main`, the
+`deploy-pages` workflow publishes `docs/` to GitHub Pages whenever it changes
+(set Pages source to "GitHub Actions").
 
 ## Build installable APK artifacts
 
 ```bash
 # Build release APKs for every face into dist/ (also writes dist/manifest.json)
 ./scripts/build-artifacts.sh
-
-# Copy APKs into docs/downloads/ for local gallery preview
-./scripts/build-artifacts.sh --output docs/downloads
-node scripts/generate-gallery.mjs
 ```
 
-On GitHub, run the `build-faces` workflow manually from the Actions tab to build
-APKs in CI and upload `dist/` as a workflow artifact (retained 90 days).
+## Publish a release
+
+Push a git tag to build APKs in CI and attach them to a GitHub Release:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The `release` workflow builds every face and uploads `dist/<id>.apk` as release
+assets. Gallery download links use `/releases/latest/download/<id>.apk`, so they
+automatically point at the newest tag without regenerating the gallery.
 
 ## Install / preview on a device
 

@@ -1,20 +1,22 @@
-name: Build watch-face APKs
+name: Release watch faces
 
-# Builds installable release APKs for every face and uploads them as a GitHub
-# Actions artifact. Run manually from the Actions tab (workflow_dispatch).
+# Builds release APKs for every face and publishes them as assets on a GitHub
+# Release for the pushed tag (e.g. git tag v1.0.0 && git push origin v1.0.0).
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - "*"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: build-faces-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,10 +34,8 @@ jobs:
       - name: Build APK artifacts
         run: ./scripts/build-artifacts.sh --output dist
 
-      - name: Upload APK artifacts
-        uses: actions/upload-artifact@v4
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
         with:
-          name: watch-face-apks
-          path: dist/
-          retention-days: 90
-          if-no-files-found: error
+          files: dist/*.apk
+          generate_release_notes: true

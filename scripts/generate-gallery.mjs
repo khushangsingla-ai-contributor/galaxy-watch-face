@@ -14,7 +14,6 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const facesDir = join(repoRoot, "faces");
 const docsDir = join(repoRoot, "docs");
 const assetsDir = join(docsDir, "assets");
-const downloadsDir = join(docsDir, "downloads");
 const defaultBranch = process.env.GITHUB_REF_NAME || process.env.GALLERY_BRANCH || "main";
 
 function resolveRepoBase() {
@@ -75,9 +74,9 @@ async function collectFaces() {
     const modulePath = meta.modulePath || `faces/${id}`;
     const gradleModule = meta.module || `:faces:${id}`;
     const sourceUrl = meta.sourceUrl || (repoBase ? `${repoBase}/tree/${defaultBranch}/${modulePath}` : null);
-    const artifactsUrl = meta.artifactsUrl || (repoBase ? `${repoBase}/actions/workflows/build-faces.yml` : null);
-    const downloadApk = join(downloadsDir, `${id}.apk`);
-    const downloadUrl = meta.downloadUrl || `downloads/${id}.apk`;
+    const releaseUrl = meta.releaseUrl || (repoBase ? `${repoBase}/releases/latest` : null);
+    const downloadUrl =
+      meta.downloadUrl || (repoBase ? `${repoBase}/releases/latest/download/${id}.apk` : null);
 
     faces.push({
       id,
@@ -93,8 +92,7 @@ async function collectFaces() {
       buildCommand: meta.buildCommand || `./gradlew ${gradleModule}:assembleDebug`,
       installCommand: meta.installCommand || `./gradlew ${gradleModule}:installDebug`,
       downloadUrl,
-      downloadReady: existsSync(downloadApk),
-      artifactsUrl,
+      releaseUrl,
       benchmark: benchmark
         ? {
             ambientMb: benchmark.ambientMb,
@@ -153,7 +151,6 @@ function render(faces) {
   .actions a { font-size: .76rem; color: #9fc0ff; text-decoration: none;
     padding: 6px 10px; border-radius: 8px; border: 1px solid #2a3555; background: #161d2e; }
   .actions a:hover { border-color: #6fa8ff; background: #1b2540; }
-  .actions a.muted { color: #7d8aa3; border-style: dashed; }
   .build-hint { margin-top: 10px; font-size: .7rem; color: #6d7a92; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   .bench { margin-top: 12px; }
   .bar { height: 8px; border-radius: 999px; background: #1f2740; overflow: hidden; }
@@ -197,12 +194,8 @@ function render(faces) {
     if (f.wffVersion) meta.push('<span>WFF v'+esc(f.wffVersion)+'</span>');
     const actions = [];
     if (f.sourceUrl) actions.push('<a href="'+esc(f.sourceUrl)+'" target="_blank" rel="noopener">Source</a>');
-    if (f.downloadUrl) {
-      const cls = f.downloadReady ? '' : ' class="muted"';
-      const title = f.downloadReady ? 'Download APK' : 'Download APK (built by CI)';
-      actions.push('<a href="'+esc(f.downloadUrl)+'"'+cls+' download>'+title+'</a>');
-    }
-    if (f.artifactsUrl) actions.push('<a href="'+esc(f.artifactsUrl)+'" target="_blank" rel="noopener">CI artifacts</a>');
+    if (f.downloadUrl) actions.push('<a href="'+esc(f.downloadUrl)+'" download>Download APK</a>');
+    if (f.releaseUrl) actions.push('<a href="'+esc(f.releaseUrl)+'" target="_blank" rel="noopener">Releases</a>');
     const actionHtml = actions.length ? '<div class="actions">'+actions.join("")+'</div>' : '';
     const buildHint = f.buildCommand
       ? '<div class="build-hint" title="Build from the repo root">'+esc(f.buildCommand)+'</div>' : '';
